@@ -139,36 +139,4 @@ public class AiResponseClient {
         this.url.addQueryParameter("bot_favorite_actor",actor);
         this.urlR.addQueryParameter("bot_favorite_actor",actor);
     }
-
-
-
-
-    public static void main(String[] args) throws Exception {
-//        JokesClient client = new JokesClient("ia24gasga","d003f1cd89msh2baa378ab5d9682p128620jsnedbbba13aff5");
-//        client.setType("spooky");
-//        client.blacklist(new String[]{"nsfw","religious"});
-//        System.out.println(client.getJoke());
-//        System.out.println(client.getJokeRaw());
-//        AiResponseClient client = new AiResponseClient("ia24gasga","d003f1cd89msh2baa378ab5d9682p128620jsnedbbba13aff5");
-//        client.setName("Monkeies Bitch");
-//        client.setLocation("US");
-//        client.setAge(16);
-//        client.setCompany("A COMPANY");
-//        client.setBirth_Date("Harry Monke");
-//        String rr = client.getResponseRaw("Where do you even live?");
-//        String r = client.getResponse("where do you live");
-//
-//        System.out.println(r);
-//        System.out.println(rr);
-//        AnimalsClient client = new AnimalsClient("ia24gasga","d003f1cd89msh2baa378ab5d9682p128620jsnedbbba13aff5");
-//        String[] img = client.getImage("wolf",1);
-//        for (String item : img){
-//            System.out.println(item);
-//        }
-        AnimeClient client = new AnimeClient("ia24gasga","d003f1cd89msh2baa378ab5d9682p128620jsnedbbba13aff5");
-        String[] img = client.getImage("happy",1);
-        for (String image : img){
-            System.out.println(image);
-        }
-    }
 }
