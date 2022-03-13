@@ -6,7 +6,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -151,12 +150,5 @@ public class AiResponseClient {
     public void setFav_Actor(String actor){
         this.url.addQueryParameter("bot_favorite_actor",actor);
         this.urlR.addQueryParameter("bot_favorite_actor",actor);
-    }
-
-    public static void main(String[] monke) throws Exception {
-        //k1DcTDcaSNbD
-        //d003f1cd89msh2baa378ab5d9682p128620jsnedbbba13aff5
-        AnimeClient client = new AnimeClient("k1DcTDcaSNbD", "d003f1cd89msh2baa378ab5d9682p128620jsnedbbba13aff5");
-        System.out.println(client.getImage("cry",3));
     }
 }
