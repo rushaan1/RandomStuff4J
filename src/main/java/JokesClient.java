@@ -7,9 +7,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class JokesClient {
@@ -19,11 +18,10 @@ public class JokesClient {
     private final String authKey;
 
     private final String rapidApiKey;
-    private final Logger logger = Logger.getLogger(getClass().getName());
 
-    private final String[] types = {"any","dark","pun","spooky","christmas","programming","misc"};
-    private final String[] explicts = {"nsfw","religious","political","racist","sexist","explicit"};
-    private String jokeType = "any";
+    private final String[] tags = {"attitude", "life", "men", "women", "sport", "beauty", "sarcastic", "marriage", "people", "car", "animal", "dirty", "love", "IT", "stupid", "motivational", "money", "intelligence", "insults", "rude", "ugly", "time", "work", "communication", "hate", "Father's Day", "christian", "God", "family", "political", "doctor", "food", "kids", "Christmas", "flirty", "mistake", "fighting", "age", "retirement", "success", "friendship", "happiness", "motorcycle", "alcohol", "school", "health", "sex", "Halloween", "puns", "birthday", "death", "blonde", "travel", "Valentines", "racist", "black", "gay", "drug", "fat", "best man speech", "wedding", "New Year", "Thanksgiving", "graduation", "autumn", "Easter", "Mother's Day", "April Fools Day", "spring", "summer", "winter", "St. Patrick's Day"};
+    private final String[] explicts = {"attitude", "life", "men", "women", "sport", "beauty", "sarcastic", "marriage", "people", "car", "animal", "dirty", "love", "IT", "stupid", "motivational", "money", "intelligence", "insults", "rude", "ugly", "time", "work", "communication", "hate", "Father's Day", "christian", "God", "family", "political", "doctor", "food", "kids", "Christmas", "flirty", "mistake", "fighting", "age", "retirement", "success", "friendship", "happiness", "motorcycle", "alcohol", "school", "health", "sex", "Halloween", "puns", "birthday", "death", "blonde", "travel", "Valentines", "racist", "black", "gay", "drug", "fat", "best man speech", "wedding", "New Year", "Thanksgiving", "graduation", "autumn", "Easter", "Mother's Day", "April Fools Day", "spring", "summer", "winter", "St. Patrick's Day"};
+    private String tag = "any";
     private String blacklist = "";
 
 
@@ -41,11 +39,16 @@ public class JokesClient {
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)
                 .build();
-
-        httpUrl.addQueryParameter("type", this.jokeType);
+        if (!Objects.equals(this.tag, "")){
+            httpUrl.addQueryParameter("tag", this.tag);
+        }
+        else{
+            httpUrl.addQueryParameter("tag", this.tags[new Random().nextInt(this.tags.length)]);
+        }
         if (!Objects.equals(blacklist,"")){
             httpUrl.addQueryParameter("blacklist",this.blacklist);
         }
+
         Request request = new Request.Builder()
                 .addHeader("authorization", this.authKey)
                 .addHeader("x-rapidapi-host", "random-stuff-api.p.rapidapi.com")
@@ -55,18 +58,8 @@ public class JokesClient {
 
         Response response = client.newCall(request).execute();
         String rawjoke = Objects.requireNonNull(response.body()).string();
-        if (!Objects.equals(String.valueOf(rawjoke.charAt(0)),"{")){
-            throw new IllegalArgumentException(rawjoke);
-        }
         JSONObject json = new JSONObject(rawjoke);
-        String joke = "";
-        if (Objects.equals(json.getString("type"), "single")){
-            joke = json.getString("joke");
-        }
-        else if (Objects.equals(json.getString("type"),"twopart")){
-            joke = json.getString("setup")+" "+json.getString("delivery");
-        }
-        return joke;
+        return json.getString("joke");
     }
     public String getJokeRaw() throws IOException {
         OkHttpClient client = new OkHttpClient().newBuilder()
@@ -79,7 +72,12 @@ public class JokesClient {
                 .host("random-stuff-api.p.rapidapi.com")
                 .addPathSegment("joke");
 
-        httpUrlJ.addQueryParameter("type", this.jokeType);
+        if (!Objects.equals(this.tag, "")){
+            httpUrl.addQueryParameter("tag", this.tag);
+        }
+        else{
+            httpUrl.addQueryParameter("tag", this.tags[new Random().nextInt(this.tags.length)]);
+        }
         if (!Objects.equals(blacklist,"")){
             httpUrlJ.addQueryParameter("blacklist",this.blacklist);
         }
@@ -97,20 +95,12 @@ public class JokesClient {
         return Objects.requireNonNull(response.body()).string();
     }
 
-    public void setType(String type){
-        boolean correctType = false;
-        for (String s : this.types) {
-            if (Objects.equals(type.toLowerCase(), s)) {
-                correctType = true;
+    public void setTag(String Tag){
+        for (String i : this.tags){
+            if (Tag.equalsIgnoreCase(i)){
+                this.tag = Tag;
                 break;
             }
-        }
-        if (!correctType){
-            logger.setLevel(Level.WARNING);
-            logger.warning("Using type 'any' because "+type+" is not a joke type. Available types are: any,dark,pun,spooky,christmas,programming,misc");
-        }
-        if (correctType){
-            this.jokeType = type;
         }
     }
 
@@ -118,18 +108,9 @@ public class JokesClient {
         for (String flag : flags) {
             for (String explict : explicts) {
                 if (Objects.equals(flag.toLowerCase(), explict)) {
-                    blacklist = blacklist + flag + "&";
+                    blacklist = blacklist + flag + ",";
                 }
             }
         }
-        if (!Objects.equals(this.blacklist,"")){
-            StringBuilder sb = new StringBuilder(this.blacklist);
-            sb.deleteCharAt(sb.length()-1);
-            this.blacklist = sb.toString().toLowerCase();
-        }
-    }
-
-    public void blacklistAllFlags(){
-        this.blacklist = "nsfw&religious&political&racist&sexist&explicit";
     }
 }

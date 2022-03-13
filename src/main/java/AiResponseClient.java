@@ -2,7 +2,11 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +37,7 @@ public class AiResponseClient {
         this.rapidApiKey = rapidApiKey;
 
     }
-    public String getResponse( String message ) throws Exception {
+    public String getResponse( String message )  {
         this.url.addQueryParameter("msg",message);
         Request request = new Request.Builder()
                 .addHeader("authorization", this.authKey)
@@ -41,19 +45,28 @@ public class AiResponseClient {
                 .addHeader("x-rapidapi-key", this.rapidApiKey)
                 .url(this.url.build())
                 .build();
-        Response response = client.newCall(request).execute();
-        String reply = Objects.requireNonNull(response.body()).string();
-        if (!Objects.equals(String.valueOf(reply.charAt(0)),"{")){
-            throw new IllegalArgumentException(reply);
+
+        String reply = null;
+        JSONObject obj = null;
+        Response response;
+        try{
+            response = client.newCall(request).execute();
+            reply = Objects.requireNonNull(response.body()).string();
+        }catch (IOException ex){
+            ex.printStackTrace();
         }
-        JSONObject obj = new JSONObject(reply);
+
+        assert reply != null;
+
         try {
+            obj = new JSONObject(reply);
             obj.getString("AIResponse");
         }
-        catch (Exception exception){
-            throw new Exception(exception+" Unable to get AIResponse from the json body: "+reply);
+        catch (JSONException exception){
+            exception.printStackTrace();
+            System.out.println(reply);
         }
-        System.out.println(this.url);
+        assert obj != null;
         return obj.getString("AIResponse");
     }
 
@@ -138,5 +151,12 @@ public class AiResponseClient {
     public void setFav_Actor(String actor){
         this.url.addQueryParameter("bot_favorite_actor",actor);
         this.urlR.addQueryParameter("bot_favorite_actor",actor);
+    }
+
+    public static void main(String[] monke) throws Exception {
+        //k1DcTDcaSNbD
+        //d003f1cd89msh2baa378ab5d9682p128620jsnedbbba13aff5
+        AnimeClient client = new AnimeClient("k1DcTDcaSNbD", "d003f1cd89msh2baa378ab5d9682p128620jsnedbbba13aff5");
+        System.out.println(client.getImage("cry",3));
     }
 }

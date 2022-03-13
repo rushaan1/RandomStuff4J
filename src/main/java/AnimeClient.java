@@ -4,6 +4,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -12,7 +13,6 @@ public class AnimeClient {
     private final String RapidApiKey;
     OkHttpClient client;
     HttpUrl.Builder url;
-    private final String[] animes = {"happy","hi","kiss","hug","punch","pat","slap","nervous","run","cry"};
     AnimeClient(String authkey, String RapidApiKey){
         client = new OkHttpClient().newBuilder()
                 .connectTimeout(60, TimeUnit.SECONDS)
@@ -27,23 +27,13 @@ public class AnimeClient {
         this.authkey = authkey;
         this.RapidApiKey = RapidApiKey;
     }
-    public String[] getImage(String anime, int limit) throws Exception {
-        if (limit<1){
-            throw new Exception("Limit should be atleast 1 or more");
+    @Deprecated
+    public String getImage(String anime,int channel) throws IOException {
+        url.addQueryParameter("query",anime);
+        if (channel !=1 &&channel!=2&&channel!=3){
+            throw new IllegalArgumentException("Channel must be 1, 2 or 3");
         }
-        boolean correctType = false;
-        for (String s : this.animes) {
-            if (Objects.equals(anime.toLowerCase(), s)) {
-                correctType = true;
-                break;
-            }
-        }
-        if (!correctType){
-            throw new Exception("Invalid Anime Type provided, available anime types are: \"happy\",\"hi\",\"kiss\",\"hug\",\"punch\",\"pat\",\"slap\",\"nervous\",\"run\",\"cry\"");
-        }
-        String[] link = new String[limit];
-        url.addPathSegment(anime);
-        url.addQueryParameter("limit",Integer.toString(limit));
+        url.addQueryParameter("channel",Integer.toString(channel));
         Request request = new Request.Builder()
                 .addHeader("authorization", this.authkey)
                 .addHeader("x-rapidapi-host", "random-stuff-api.p.rapidapi.com")
@@ -52,34 +42,14 @@ public class AnimeClient {
                 .build();
         Response response = client.newCall(request).execute();
         String image = Objects.requireNonNull(response.body()).string().replaceAll("\\[","").replaceAll("]","");
-        if (!Objects.equals(String.valueOf(image.charAt(0)),"{")){
-            throw new IllegalArgumentException(image);
-        }
-        JSONObject json = new JSONObject(image);
 
-        if (limit>1){
-//            System.out.println(json.getString("url"));
-//            System.out.println(image.split(",").length);
-            try{
-                json.getString("url");
-            }
-            catch (Exception ex){
-                throw new Exception(ex+" "+image);
-            }
-            for (int i =0;i<image.split(",").length;i++){
-                JSONObject jsonObject = new JSONObject(image.split(",")[i]);
-
-                link[i] = jsonObject.getString("url");
-            }
-        }
-        if (limit == 1) {
-            try{
-                link[0] = json.getString("url");
-            }
-            catch (Exception ex){
-                throw new Exception(ex+" "+image);
-            }
-        }
-        return link;
+//            try{
+//                JSONObject json = new JSONObject(image);
+//                link = json.getString("title");
+//            }
+//            catch (Exception ex){
+//                ex.printStackTrace();
+//            }
+        return image;
     }
 }
