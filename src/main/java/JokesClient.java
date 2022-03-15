@@ -53,7 +53,6 @@ public class JokesClient {
                 .addHeader("authorization", this.authKey)
                 .addHeader("x-rapidapi-host", "random-stuff-api.p.rapidapi.com")
                 .addHeader("x-rapidapi-key", this.rapidApiKey)
-                .url(httpUrl.build().toString().replaceAll("%26","&"))
                 .build();
 
         Response response = client.newCall(request).execute();
