@@ -64,3 +64,7 @@ Sets the bot's favorite actress.
 
 #### .setFav_Actor(String actor)
 Sets the bot's favorite actor.
+
+
+
+## Completed Docs of all features will come very soon!
