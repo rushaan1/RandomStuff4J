@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"<Unnamed>","l":"AiResponseClient"},{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"<Unnamed>","l":"AnimalsClient"},{"p":"<Unnamed>","l":"AnimeClient"},{"p":"<Unnamed>","l":"JokesClient"},{"p":"<Unnamed>","l":"WeatherClient"}];updateSearchResults();
