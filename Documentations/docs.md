@@ -16,7 +16,7 @@ System.out.print(response);
 ```
 It should respond you by greeting you back with a random text!
 
-## Methods for AiResponseClient
+## Methods of AiResponseClient
 #### .getResponseRaw(String message)
 Returns a String and throws Exception, it gives the response directly from the api without processing it, its in JSON format.
 
@@ -79,7 +79,7 @@ Available Animals are:
 ### Example of fetching animal images:
 
 ```java
-AnimalsClient client = new AnimalsClient("ZHIXG1IuoO9d","d003f1cd89msh2baa378ab5d9682p128620jsnedbbba13aff5");
+AnimalsClient client = new AnimalsClient("Authorization_Key","Rapid_Api_Key");
 String[] images = client.getImage("cat",5);
 System.out.println(Arrays.toString(images));
  ```
@@ -89,4 +89,67 @@ The above code will print out an array with 5 images of cats.
 #### Limit parameter
 The quantity of image to be fetched from the API. Cannot be greater than 12 and cannot be less than 1.
 
-More docs coming very soon.
+
+# JokesClient
+Returns a random joke of a specific type
+
+### Example usage of JokesClient:
+
+```java
+JokesClient client = new JokesClient("Authorization_Key","Rapid_Api_Key");
+String joke = client.getJoke();
+System.out.println(joke);
+```
+
+It will print out a random joke.
+
+## Methods of JokesClient
+
+#### .getJoke()
+It gives a random joke.
+#### .getJokeRaw()
+It gives joke and the tags of the joke in the form of json.
+#### .setTag(String Tag)
+Sets the tag of the joke, case sensitive
+#### .blacklist(String[] flags)
+Blacklists the tags provided
+
+
+# AnimeClient
+Gives anime search results, not very stable and results can be irrelevant
+
+### Example usage of AnimeClient:
+
+```java
+AnimeClient client = new AnimeClient("Authorization_Key","Rapid_Api_Key");
+String animeResults = client.getImage("smile",1);
+System.out.println(joke);
+```
+
+It will print out search results of given term.
+The channel parameter should be either be 1, 2 or 3.
+
+
+# WeatherClient
+It gives weather information
+
+### Example usage of WeatherClient:
+
+```java
+WeatherClient client = new WeatherClient("Authorization_Key","Rapid_Api_Key");
+JSONArray weatherForecast = client.getWeatherForecast("Tokyo");
+System.out.println(weatherForecast);
+```
+
+It will print out a JsonArray which contains the data.
+
+## Methods of WeatherClient
+
+#### .getLocationData(String city)
+Returns the location data of the provided city in JSONObject datatype.
+#### .getWeatherDataRaw(String city)
+Returns a JSONArray of the response.
+#### .getWeatherCurrent(String city)
+Gives the weather information of the current date.
+#### .getWeatherForecast(String city)
+Gives the forecast of weather in JSONArray.
