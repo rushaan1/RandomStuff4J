@@ -66,5 +66,27 @@ Sets the bot's favorite actress.
 Sets the bot's favorite actor.
 
 
+# AnimalsClient
+Gives the image of the animal you want.
+Available Animals are:
+<ol>
+  <li>dog</li>
+  <li>cat</li>
+  <li>wolf</li>
+  <li>fox</li>
+</ol>  
 
-## Completed Docs of all features will come very soon!
+### Example of fetching animal images:
+
+```java
+AnimalsClient client = new AnimalsClient("ZHIXG1IuoO9d","d003f1cd89msh2baa378ab5d9682p128620jsnedbbba13aff5");
+String[] images = client.getImage("cat",5);
+System.out.println(Arrays.toString(images));
+ ```
+ 
+The above code will print out an array with 5 images of cats.
+
+#### Limit parameter
+The quantity of image to be fetched from the API. Cannot be greater than 12 and cannot be less than 1.
+
+More docs coming very soon.
