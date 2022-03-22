@@ -53,6 +53,7 @@ public class JokesClient {
                 .addHeader("authorization", this.authKey)
                 .addHeader("x-rapidapi-host", "random-stuff-api.p.rapidapi.com")
                 .addHeader("x-rapidapi-key", this.rapidApiKey)
+                .url(this.httpUrl.build())
                 .build();
 
         Response response = client.newCall(request).execute();
@@ -88,9 +89,6 @@ public class JokesClient {
                 .build();
 
         Response response = client.newCall(request).execute();
-        if (!Objects.equals(String.valueOf(Objects.requireNonNull(response.body()).string().charAt(0)),"{")){
-            throw new IllegalArgumentException(Objects.requireNonNull(response.body()).string());
-        }
         return Objects.requireNonNull(response.body()).string();
     }
 

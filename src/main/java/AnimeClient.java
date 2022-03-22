@@ -27,7 +27,6 @@ public class AnimeClient {
         this.authkey = authkey;
         this.RapidApiKey = RapidApiKey;
     }
-    @Deprecated
     public String getImage(String anime,int channel) throws IOException {
         url.addQueryParameter("query",anime);
         if (channel !=1 &&channel!=2&&channel!=3){
